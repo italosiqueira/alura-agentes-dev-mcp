@@ -1,0 +1,21 @@
+from fastmcp import FastMCP
+import requests
+import json
+
+# Define o endpoint da API
+url = "http://127.0.0.1:8000"
+
+# Define um Servidor MCP com a biblioteca FastMCP 
+mcp = FastMCP("Clinica MCP")
+
+@mcp.tool
+async def buscar_paciente_por_cpf(cpf: str):
+    """Busca um paciente pelo CPF."""
+    response = requests.get(f"{url}/pacientes/{cpf}")
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return response.json().get("detail")[0]
+
+if __name__ == "__main__":
+    mcp.run(transport="stdio")
