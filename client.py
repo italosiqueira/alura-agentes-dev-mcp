@@ -22,16 +22,14 @@ client = MultiServerMCPClient(
     }
 )
 
-async def load_agent():
-    tools = await client.get_tools()
-    return create_agent(
-        "gpt-4o-mini",
-        tools  
-    )
+tools = asyncio.run(client.get_tools())
+
+agent = create_agent(
+    "gpt-4o-mini",
+    tools  
+)
 
 async def responder_pergunta(pergunta: str):
-
-    agent = await load_agent()
 
     paciente_response = await agent.ainvoke(
         {"messages": [{"role": "user", "content": pergunta}]}
