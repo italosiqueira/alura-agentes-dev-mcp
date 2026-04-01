@@ -11,8 +11,8 @@ async def inicia_chat():
     prompt = efetua_pergunta()
 
     while prompt.strip().lower() != 'sair':
-        resposta, obj = await client.responder_pergunta(prompt)
-        print(f"\n# Resposta:\n {resposta}\n")
+        resposta = await client.responder_pergunta(prompt)
+        print(f"\n# Resposta:\n {resposta['conteudo']}\n")
         prompt = efetua_pergunta()
     
     print('### OBRIGADO POR USAR O AGENTE CLÍNICO! ATÉ LOGO! ###')
