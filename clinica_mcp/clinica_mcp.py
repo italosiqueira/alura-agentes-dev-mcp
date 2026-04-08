@@ -99,13 +99,22 @@ async def consultar_horario(especialidade: str, data: str = ""):
         data (str): Data para consulta no formato "YYYY-MM-DD"
 
     Returns:
-        array: Lista de horários disponíveis para a especialidade e data informados, onde cada item é um dicionário com os campos:
-            - "horario_id" (int): ID do horário,
-            - "data" (str): data do horário no formato YYYY-MM-DD
-            - "hora" (str): hora disponível, no formato HH:MM
-            - "medico_id" (int): ID do Médico
-            - "medico_nome" (str): Nome do Médico
-            - "especialidade" (str): Especialidade do Médico
+        dict: Um dicionário contendo:
+            - Se houver horários disponíveis:
+                - "sucesso" (bool): True
+                - "horarios" (list): Lista de horários disponíveis para a especialidade e data informados, onde cada item é um dicionário com os campos:
+                    - "horario_id" (int): ID do horário,
+                    - "data" (str): data do horário no formato YYYY-MM-DD
+                    - "hora" (str): hora disponível, no formato HH:MM
+                    - "medico_id" (int): ID do Médico
+                    - "medico_nome" (str): Nome do Médico
+                    - "especialidade" (str): Especialidade do Médico
+            - Se não houver horários disponíveis:
+                - "sucesso" (bool): False
+                - "mensagem" (str): Mensagem indicando que não há horários disponíveis
+            - Se ocorrer um erro durante a consulta:
+                - "sucesso" (bool): False
+                - "mensagem" (str): Mensagem informando que ocorreu um erro ao consultar os horários
     """
     payload = {
         "especialidade": especialidade
@@ -124,13 +133,36 @@ async def consultar_horario(especialidade: str, data: str = ""):
         return { "sucesso": False, "mensagem": "Erro ao buscar horários." }
 
 @mcp.tool(name="agendar_consulta")
-async def agendar_consulta():
+async def agendar_consulta(cpf: str, horario_id: int, observacoes: str = ""):
     """
     Agenda uma consulta para um paciente.
 
     Args:
+        cpf (str): CPF do paciente
+        horario_id (int): ID do horário a ser agendado
+        observacoes (str): Observações adicionais para o agendamento (opcional)
 
     Returns:
+        dict: Um dicionário contendo:
+            - Se agendamento realizado com sucesso:
+                - "sucesso" (bool): True
+                - "mensagem" (str): Mensagem de sucesso
+                - "agendamento" (dict): Dados do agendamento com os campos:
+                    - "agendamento_id" (int): ID do agendamento
+                    - "status" (str): Status do agendamento (ex: "agendado")
+                    - "observacoes" (str): Observações do agendamento
+                    - "paciente_nome" (str): Nome do paciente
+                    - "cpf" (str): CPF do paciente
+                    - "medico_nome" (str): Nome do médico
+                    - "especialidade" (str): Especialidade médica
+                    - "data" (str): Data da consulta no formato YYYY-MM-DD
+                    - "hora" (str): Hora da consulta no formato HH:MM
+            - Se não foi possível registrar o agendamento:
+                - "sucesso" (bool): False
+                - "mensagem" (str): Mensagem de erro indicando o provável motivo pelo qual o agendamento não pôde ser registrado (ex: paciente não encontrado, horário não encontrado, horário não disponível)
+            - Se ocorrer um erro durante o processo:
+                - "sucesso" (bool): False
+                - "mensagem" (str): Mensagem de erro indicando que ocorreu um erro ao tentar agendar a consulta
     """
     pass
 
