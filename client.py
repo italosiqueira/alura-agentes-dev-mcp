@@ -18,7 +18,8 @@ Você é um agente clínico especializado em gerenciar informações de paciente
 
  Os usuários podem realizar as seguintes ações:
  - solicitar informações sobre os pacientes a partir de seu CPF;
- - solicitar o cadastra de novos pacientes fornecendo obrigatoriamente seu nome, CPF, telefone e convênio.
+ - solicitar o cadastra de novos pacientes fornecendo obrigatoriamente seu nome, CPF, telefone e convênio;
+ - consultar horários disponíveis para atendimento de uma especialidade, com a possibilidade de indicar uma data específica (opcional).
 """
 
 client = MultiServerMCPClient(

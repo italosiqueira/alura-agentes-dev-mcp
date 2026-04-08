@@ -88,5 +88,51 @@ async def cadastrar_paciente(nome: str, cpf: str, telefone: str, convenio: str):
     else:
         return { "sucesso": False, "mensagem": "Erro ao cadastrar paciente." }
 
+@mcp.tool(name="consultar_horario")
+async def consultar_horario(especialidade: str, data: str = ""):
+    """
+    Consulta os horários disponíveis para atendimento da especialidade desejada. Caso uma data seja informada, retorna os horários disponíveis para aquela data.
+    Caso contrário, retorna todos os horários disponíveis para a especialidade.
+
+    Args:
+        especialidade (str): Especialidade médica a ser consultada
+        data (str): Data para consulta no formato "YYYY-MM-DD"
+
+    Returns:
+        array: Lista de horários disponíveis para a especialidade e data informados, onde cada item é um dicionário com os campos:
+            - "horario_id" (int): ID do horário,
+            - "data" (str): data do horário no formato YYYY-MM-DD
+            - "hora" (str): hora disponível, no formato HH:MM
+            - "medico_id" (int): ID do Médico
+            - "medico_nome" (str): Nome do Médico
+            - "especialidade" (str): Especialidade do Médico
+    """
+    payload = {
+        "especialidade": especialidade
+    }
+    if data:
+        payload["data"] = data
+
+    response = requests.get(f"{url}/horarios", params=payload)
+    if (response.status_code == 200):
+        body = response.json()
+        if body["quantidade"] > 0:
+            return { "sucesso": True, "horarios": body["horarios"] }
+        else:
+            return { "sucesso": False, "mensagem": "Não há horário disponível." }
+    else:
+        return { "sucesso": False, "mensagem": "Erro ao buscar horários." }
+
+@mcp.tool(name="agendar_consulta")
+async def agendar_consulta():
+    """
+    Agenda uma consulta para um paciente.
+
+    Args:
+
+    Returns:
+    """
+    pass
+
 if __name__ == "__main__":
     mcp.run(transport="stdio")
