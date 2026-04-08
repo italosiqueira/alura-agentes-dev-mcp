@@ -164,7 +164,20 @@ async def agendar_consulta(cpf: str, horario_id: int, observacoes: str = ""):
                 - "sucesso" (bool): False
                 - "mensagem" (str): Mensagem de erro indicando que ocorreu um erro ao tentar agendar a consulta
     """
-    pass
+    payload = {
+        "cpf": cpf,
+        "horario_id": horario_id,
+        "observacoes": observacoes
+    }
+
+    response = requests.post(f"{url}/consultas/agendar", json=payload)
+    if (response.status_code == 200):
+        body = response.json()
+        return { "sucesso": True, "agendamento": body["agendamento"] }
+    elif (response.status_code == 400):
+        return { "sucesso": False, "mensagem": body["detail"] }
+    else:
+        return { "sucesso": False, "mensagem": "Erro ao buscar horários." }
 
 if __name__ == "__main__":
     mcp.run(transport="stdio")
